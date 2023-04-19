@@ -103,19 +103,20 @@
                         <!-- Country -->
                         <div class="mb-3">
                             <label class="inline-block mb-2">Country</label>
-                            <VeeField name="country"
+                            <VeeField name="country" as="select"
                                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded">
-                                <option value="USA">USA</option>
-                                <option value="Mexico">Mexico</option>
+                                <option value="The Netherlands">The Netherlands</option>
                                 <option value="Germany">Germany</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="USA">USA</option>
                             </VeeField>
                             <ErrorMessage class="text-red-600" name="country" />
                         </div>
                         <!-- TOS -->
                         <div class="mb-3 pl-6">
-                            <VeeField name="tos" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" />
-                            <ErrorMessage class="text-red-600" name="tos" />
+                            <VeeField name="tos" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded" value="1" />
                             <label class="inline-block">Accept terms of service</label>
+                            <ErrorMessage class="text-red-600 block" name="tos" />
                         </div>
                         <button type="submit"
                             class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition hover:bg-purple-700">
@@ -140,10 +141,10 @@ export default {
             schema: {
                 name: 'required',
                 email: 'required|email',
-                age: 'required|numeric',
-                password: 'required|min:8',
-                confirm_password: 'required|min:8',
-                country: 'required',
+                age: 'required|numeric|min_value:16|max_value:100',
+                password: 'required|min:6|max:100',
+                confirm_password: 'required|confirmed:@password',
+                country: 'required|excluded:USA',
                 tos: 'required',
             },
         }

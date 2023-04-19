@@ -3,9 +3,13 @@ import {
   required,
   email,
   min,
+  min_value,
   max,
+  max_value,
   numeric,
-  alpha_spaces as alphaSpaces
+  alpha,
+  alpha_spaces as alphaSpaces,
+  not_one_of as excluded
 } from '@vee-validate/rules'
 
 export default {
@@ -16,12 +20,13 @@ export default {
 
     defineRule('min', min)
     defineRule('max', max)
+    defineRule('alpha', alpha)
     defineRule('email', email)
     defineRule('numeric', numeric)
     defineRule('required', required)
-    defineRule('alphaSpaces', alphaSpaces)
-    // Object.keys(AllRules).forEach((rule) => {
-    //   defineRule(rule, AllRules[rule])
-    // })
+    defineRule('excluded', excluded)
+    defineRule('min_value', min_value)
+    defineRule('max_value', max_value)
+    defineRule('alpha_spaces', alphaSpaces)
   }
 }
