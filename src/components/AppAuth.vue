@@ -57,7 +57,8 @@
                         </button>
                     </form>
                     <!-- Registration Form -->
-                    <VeeForm v-show="tab === 'register'" :validation-schema="schema">
+                    <VeeForm v-show="tab === 'register'" :validation-schema="schema" @submit="register"
+                        :initial-values="userData">
                         <!-- Name -->
                         <div class="mb-3">
                             <label class="inline-block mb-2">Name</label>
@@ -85,11 +86,15 @@
                         <!-- Password -->
                         <div class="mb-3">
                             <label class="inline-block mb-2">Password</label>
-                            <VeeField name="password" type="password"
-                                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                                placeholder="Password" />
+                            <VeeField name="password" :bails="false" v-slot="{ field, errors }">
+                                <input type="password"
+                                    class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
+                                    placeholder="Password" v-bind="field" />
+                                <div class="text-red-600" v-for="error in errors" :key="error">
+                                    {{ error }}
+                                </div>
+                            </VeeField>
                             <ErrorMessage class="text-red-600" name="password" />
-
                         </div>
                         <!-- Confirm Password -->
                         <div class="mb-3">
@@ -142,11 +147,14 @@ export default {
                 name: 'required',
                 email: 'required|email',
                 age: 'required|numeric|min_value:16|max_value:100',
-                password: 'required|min:6|max:100',
+                password: 'required|min:55|max:100|excluded:passwor',
                 confirm_password: 'required|confirmed:@password',
-                country: 'required|excluded:USA',
-                tos: 'required',
+                country: 'required|country_excluded:USA',
+                tos: 'tos',
             },
+            userData: {
+                country: 'The Netherlands'
+            }
         }
     },
     computed: {
@@ -160,6 +168,9 @@ export default {
         toggleAuthModal() {
             // this.modalStore.isOpen = !this.modalStore.isOpen
             this.toggleModal()
+        },
+        register(values) {
+            console.log(values)
         }
     }
 }
