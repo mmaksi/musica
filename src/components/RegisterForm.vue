@@ -73,6 +73,8 @@
 </template>
 
 <script>
+import { createUser } from "../includes/firebase"
+
 export default {
     name: "RegisterFoem",
     data() {
@@ -96,19 +98,27 @@ export default {
         }
     },
     methods: {
-        register(values) {
+        async register(values) {
             this.reg_in_submission = true;
-            this.reg_show_alert = true;
             // this.reg_alert_variant = "bg-blue-500";
             // this.reg_alert_msg = "Please wait! Your account is being created. :)"
-            this.reg_alert_variant = "bg-green-500";
-            this.reg_alert_msg = "Success! You are successfully registered."
 
+            let userCreds = null;
+            userCreds = await createUser(values.email, values.password)
+            if (userCreds.user) {
+                this.reg_in_submission = false;
+                this.reg_show_alert = true;
+                this.reg_alert_variant = "bg-green-500";
+                this.reg_alert_msg = "Success! You are successfully registered.";
+            } else {
+                this.reg_in_submission = false;
+                this.reg_show_alert = true;
+                this.reg_alert_variant = "bg-red-500";
+                this.reg_alert_msg = "Unexpected error occurred. Please try again later."
+            }
             setTimeout(() => {
                 this.reg_show_alert = false;
-                this.reg_in_submission = false
             }, 3000);
-            console.log(values)
         },
     },
     // createUser()
