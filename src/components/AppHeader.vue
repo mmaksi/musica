@@ -31,8 +31,8 @@ export default {
         ...mapActions(useModalStore, ['toggleModal']),
         toggleAuthModal() {
             // this.modalStore.isOpen = !this.modalStore.isOpen
-            this.toggleModal()
-        }
+            this.toggleModal();
+        },
     }
 }
 

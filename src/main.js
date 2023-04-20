@@ -9,11 +9,13 @@ import './assets/base.css'
 
 import './includes/firebase'
 import VeeValidatePlugin from './includes/validation'
+import { auth } from './includes/firebase'
 
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-app.use(VeeValidatePlugin)
-
-app.mount('#app')
+let authFlag = true
+auth.onAuthStateChanged(() => {
+  // To mount the Vue instance only once
+  if (authFlag) {
+    authFlag = false
+    createApp(App).use(createPinia()).use(router).use(VeeValidatePlugin).mount('#app')
+  }
+})

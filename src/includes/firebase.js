@@ -14,16 +14,19 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 
-const auth = firebase.auth()
+export const auth = firebase.auth()
 const db = firebase.firestore()
 
 // Selects the users collection
 const usersCollection = db.collection('users')
 
 // Create a user with email and password in firebase
-export async function createUser(email, password) {
+export async function createUser(name, email, password) {
   try {
     const userCreds = await auth.createUserWithEmailAndPassword(email, password)
+    await userCreds.user.updateProfile({
+      displayName: name
+    })
     return userCreds
   } catch (error) {
     return new Error(error)
@@ -31,12 +34,19 @@ export async function createUser(email, password) {
 }
 
 // Save to the firestore database
-export async function addUser(userData) {
+export async function addUser(uid, userData) {
   try {
-    await usersCollection.add(userData)
+    await usersCollection.doc(userData.uid).set(userData)
     return true
   } catch (error) {
     console.log(error)
     return false
   }
+}
+
+export function checkCurrentUser() {
+  auth.onAuthStateChanged(() => {
+    const user = firebase.auth().currentUser
+    return user
+  })
 }

@@ -74,9 +74,14 @@
 
 <script>
 import { createUser, addUser } from "../includes/firebase"
+import { useUserStore } from '@/stores/user'
+import { mapWritableState } from 'pinia';
 
 export default {
-    name: "RegisterFoem",
+    name: "RegisterForm",
+    computed: {
+        ...mapWritableState(useUserStore, ["isLoggedIn"])
+    },
     data() {
         return {
             schema: {
@@ -105,28 +110,25 @@ export default {
             this.reg_alert_msg = "Unexpected error occurred. Please try again later."
         },
         async register(values) {
-            const { name, email, age, country } = values;
+            const { name, email, password, age, country } = values;
             // Tells VeeValidate that submission is done
             this.reg_in_submission = true;
-
             let userCreds = null;
-            userCreds = await createUser(values.email, values.password);
+            userCreds = await createUser(name, email, password);
             if (userCreds.user) {
                 // Add the user to the database
-                const status = await addUser({ name, email, age, country });
+                const status = await addUser(userCreds.user.uid, { name, email, age, country });
                 if (status) {
                     this.reg_in_submission = false;
                     this.reg_show_alert = true;
                     this.reg_alert_variant = "bg-green-500";
                     this.reg_alert_msg = "Success! You are successfully registered.";
+                    this.isLoggedIn = true;
                 } else {
                     this.handleError();
                 }
             } else {
-                this.reg_in_submission = false;
-                this.reg_show_alert = true;
-                this.reg_alert_variant = "bg-red-500";
-                this.reg_alert_msg = "Unexpected error occurred. Please try again later.";
+                this.handleError();
             }
             setTimeout(() => {
                 this.reg_show_alert = false;
