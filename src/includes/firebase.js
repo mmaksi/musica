@@ -17,15 +17,26 @@ firebase.initializeApp(firebaseConfig)
 const auth = firebase.auth()
 const db = firebase.firestore()
 
+// Selects the users collection
 const usersCollection = db.collection('users')
 
-export { auth, db, usersCollection }
-
+// Create a user with email and password in firebase
 export async function createUser(email, password) {
   try {
     const userCreds = await auth.createUserWithEmailAndPassword(email, password)
     return userCreds
   } catch (error) {
     return new Error(error)
+  }
+}
+
+// Save to the firestore database
+export async function addUser(userData) {
+  try {
+    await usersCollection.add(userData)
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
   }
 }
