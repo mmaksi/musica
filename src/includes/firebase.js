@@ -50,3 +50,12 @@ export function checkCurrentUser() {
     return user
   })
 }
+
+export async function authenticate({ email, password }) {
+  const userCreds = await auth.signInWithEmailAndPassword(email, password)
+  return userCreds.user
+}
+
+export async function logoutUser() {
+  await auth.signOut()
+}

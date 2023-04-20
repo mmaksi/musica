@@ -29,8 +29,15 @@
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { authenticate } from "../includes/firebase"
+import { useUserStore } from "../stores/user";
+
 export default {
     name: "LoginForm",
+    computed: {
+        ...mapWritableState(useUserStore, ["isLoggedIn"])
+    },
     data() {
         return {
             loginSchema: {
@@ -44,9 +51,22 @@ export default {
         }
     },
     methods: {
-        login(values) {
+        async login(values) {
             this.login_in_submission = true;
             this.login_show_alert = true;
+
+            try {
+                const loggedInUser = await authenticate(values)
+                if (loggedInUser) {
+                    this.isLoggedIn = true;
+                }
+            } catch (error) {
+                this.login_in_submission = false;
+                this.login_alert_variant = "bg-red-500";
+                this.login_alert_msg = "Invalid login details."
+                return
+            }
+
             this.login_alert_variant = "bg-green-500";
             this.login_alert_msg = "Success! You are successfully logged in."
 
@@ -54,7 +74,7 @@ export default {
                 this.login_show_alert = false;
                 this.login_in_submission = false
             }, 3000);
-            console.log(values)
+            window.location.reload()
         }
     }
 }

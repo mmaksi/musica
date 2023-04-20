@@ -133,6 +133,7 @@ export default {
             setTimeout(() => {
                 this.reg_show_alert = false;
             }, 3000);
+            window.location.reload()
         },
     },
     // createUser()
