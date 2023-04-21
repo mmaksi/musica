@@ -36,7 +36,7 @@ a:hover {
   border-style: solid;
 }
 
-input[type="file"] {
+input[type='file'] {
   margin-top: 20px;
 }
 
@@ -58,6 +58,10 @@ input[type="file"] {
 .music-bg {
   animation: slide 50s linear infinite;
   will-change: background-position;
+}
+
+.no-active {
+  color: white !important;
 }
 
 @keyframes progress-bar-stripes {
