@@ -16,6 +16,6 @@ auth.onAuthStateChanged(() => {
   // To mount the Vue instance only once
   if (authFlag) {
     authFlag = false
-    createApp(App).use(createPinia()).use(router).use(VeeValidatePlugin).mount('#app')
+    createApp(App).use(router).use(createPinia()).use(VeeValidatePlugin).mount('#app')
   }
 })
