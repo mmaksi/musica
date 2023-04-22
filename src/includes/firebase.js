@@ -84,3 +84,10 @@ export async function storeSongWithUser(task) {
   // Store the song with user data in firestore
   await songsCollection.add(song) // doesn't allow for setting custom document id
 }
+
+export function cancelUpload(songs) {
+  songs.forEach((song) => {
+    const task = song.task
+    task.cancel()
+  })
+}

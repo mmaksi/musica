@@ -11,9 +11,9 @@
                 @drag.prevent.stop="" @dragstart.prevent.stop="" @dragend.prevent.stop="is_dragover = false"
                 @dragover.prevent.stop="is_dragover = true" @dragenter.prevent.stop="is_dragover = true"
                 @dragleave.prevent.stop="is_dragover = false" @drop.prevent.stop="upload($event)">
-
                 <h5>Drop your files here</h5>
             </div>
+            <input type="file" multiple @change="upload" />
             <hr class="my-6" />
             <!-- Progess Bars -->
             <div class="mb-4" v-for="upload in uploads" :key="upload.name">
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { uploadToFirebase, storeSongWithUser } from "../includes/firebase"
+import { uploadToFirebase, storeSongWithUser, cancelUpload } from "../includes/firebase"
 
 export default {
     name: "Upload",
@@ -46,7 +46,7 @@ export default {
     methods: {
         upload($event) {
             this.is_dragover = false;
-            const files = [...$event.dataTransfer.files]
+            const files = $event.dataTransfer ? [...$event.dataTransfer.files] : [...$event.target.files];
             // Upload only mp3 files
             files.forEach(file => {
                 if (file.type !== 'audio/mpeg') {
@@ -68,11 +68,12 @@ export default {
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                         this.uploads[uploadIndex].current_progress = progress
                     },
-                    () => {
+                    (error) => {
                         // Error
                         this.uploads[uploadIndex].variant = 'bg-red-400'
                         this.uploads[uploadIndex].icon = 'fas fa-times'
                         this.uploads[uploadIndex].text_class = 'text-red-400'
+                        throw new Error(error)
                     },
                     () => {
                         storeSongWithUser(task)
@@ -84,6 +85,10 @@ export default {
                 )
             });
         }
+    },
+    beforeUnmount() {
+        const songs = this.uploads
+        cancelUpload(songs)
     }
 }
 </script>
