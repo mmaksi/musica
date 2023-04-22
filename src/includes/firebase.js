@@ -91,3 +91,7 @@ export function cancelUpload(songs) {
     task.cancel()
   })
 }
+
+export async function getUserSongs() {
+  return await songsCollection.where('uid', '==', auth.currentUser.uid).get()
+}
