@@ -18,14 +18,14 @@
                     <label class="inline-block mb-2">Song Title</label>
                     <VeeField name="modifiedName" type="text"
                         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                        placeholder="Enter Song Title" />
+                        placeholder="Enter Song Title" @input="updateUnsavedFlag(true)" />
                     <ErrorMessage class="text-red-600" name="modifiedName" />
                 </div>
                 <div class="mb-3">
                     <label class="inline-block mb-2">Genre</label>
                     <VeeField name="genre" type="text"
                         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
-                        placeholder="Enter Genre" />
+                        placeholder="Enter Genre" @input="updateUnsavedFlag(true)" />
                 </div>
                 <button :disabled="inSubmission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">
                     Submit
@@ -69,10 +69,13 @@ export default {
             type: Function,
             required: true
         },
+        updateUnsavedFlag: {
+            type: Function,
+        },
         index: {
             type: Number,
             required: true
-        }
+        },
     },
     methods: {
         async editSong(values) {
@@ -98,10 +101,12 @@ export default {
                 this.inSubmission = false;
                 this.alertVariant = 'bg-red-500';
                 this.alertMessage = 'Something went wrong. Try again later.'
+                console.log(error)
                 setTimeout(() => {
                     this.showAlert = true;
                 }, 1000);
             }
+            this.updateUnsavedFlag(false)
         },
         async removeSongDB() {
             await deleteSong(this.song.docID, this.song.originalName)

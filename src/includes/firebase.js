@@ -71,6 +71,8 @@ export function uploadToFirebase(file) {
 }
 
 export async function storeSongWithUser(task) {
+  // Store the queried songs in a local state
+
   const song = {
     uid: auth.currentUser.uid,
     displayName: auth.currentUser.displayName,
@@ -83,7 +85,9 @@ export async function storeSongWithUser(task) {
 
   // Store the song with user data in firestore
   await songsCollection.add(song) // doesn't allow for setting custom document id
-  return song
+  const snapshot = await songsCollection.where('uid', '==', auth.currentUser.uid).get()
+  // const addedSongDocID = snapshot[snapshot.length - 1]
+  return { ...song, docID: snapshot.docs[snapshot.docs.length - 1].id }
 }
 
 export function cancelUpload(songs) {
@@ -101,7 +105,7 @@ export async function editSongData(docID, values) {
   try {
     await songsCollection.doc(docID).update({ modifiedName: values.modifiedName })
   } catch (error) {
-    throw new Error(`Failed to update song data. Try again later.`)
+    throw new Error(error)
   }
 }
 

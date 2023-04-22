@@ -14,7 +14,8 @@
                     <div class="p-6">
                         <!-- Composition Items -->
                         <CompositionItem v-for="(song, index) in songs" :updateSongData="updateSongData"
-                            :removeSong="removeSong" :index="index" :key="song" :song="song" />
+                            :removeSong="removeSong" :updateUnsavedFlag="updateUnsavedFlag" :index="index" :key="song"
+                            :song="song" />
                     </div>
                 </div>
             </div>
@@ -31,7 +32,8 @@ export default {
     name: 'Manage',
     data() {
         return {
-            songs: []
+            songs: [],
+            unsavedFlag: false,
         }
     },
     components: {
@@ -48,6 +50,9 @@ export default {
         },
         addSongToArray(song) {
             this.songs.push(song)
+        },
+        updateUnsavedFlag(value) {
+            this.unsavedFlag = value
         }
     },
     // Query the database for songs of the logged-in user when mounting the Manage component
@@ -61,6 +66,14 @@ export default {
             }
             this.songs.push(song)
         })
+    },
+    beforeRouteLeave(to, from, next) {
+        if (!this.unsavedFlag) {
+            next();
+            return
+        }
+        const leave = confirm("You have unsaved changes. Are you sure you want to leave?")
+        next(leave)
     }
 }
 </script>
