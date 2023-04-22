@@ -43,6 +43,12 @@ export default {
             uploads: [],
         }
     },
+    props: {
+        addSongToArray: {
+            type: Function,
+            required: true,
+        }
+    },
     methods: {
         upload($event) {
             this.is_dragover = false;
@@ -75,12 +81,14 @@ export default {
                         this.uploads[uploadIndex].text_class = 'text-red-400'
                         throw new Error(error)
                     },
-                    () => {
-                        storeSongWithUser(task)
+                    async () => {
+                        const song = await storeSongWithUser(task)
                         // Success
                         this.uploads[uploadIndex].variant = 'bg-green-400'
                         this.uploads[uploadIndex].icon = 'fas fa-check'
                         this.uploads[uploadIndex].text_class = 'text-green-400'
+
+                        this.addSongToArray(song)
                     }
                 )
             });

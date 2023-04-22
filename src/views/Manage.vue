@@ -3,7 +3,7 @@
     <section class="container mx-auto mt-6">
         <div class="md:grid md:grid-cols-3 md:gap-4">
             <div class="col-span-1">
-                <AppUpload />
+                <AppUpload :addSongToArray="addSongToArray" />
             </div>
             <div class="col-span-2">
                 <div class="bg-white rounded border border-gray-200 relative flex flex-col">
@@ -13,7 +13,8 @@
                     </div>
                     <div class="p-6">
                         <!-- Composition Items -->
-                        <CompositionItem v-for="song in songs" :key="song" :song="song" />
+                        <CompositionItem v-for="(song, index) in songs" :updateSongData="updateSongData"
+                            :removeSong="removeSong" :index="index" :key="song" :song="song" />
                     </div>
                 </div>
             </div>
@@ -36,6 +37,18 @@ export default {
     components: {
         AppUpload,
         CompositionItem
+    },
+    methods: {
+        updateSongData(i, values) {
+            this.songs[i].modifiedName = values.modifiedName
+            this.songs[i].genre = values.genre
+        },
+        removeSong(i) {
+            this.songs.splice(i, 1)
+        },
+        addSongToArray(song) {
+            this.songs.push(song)
+        }
     },
     // Query the database for songs of the logged-in user when mounting the Manage component
     async created() {

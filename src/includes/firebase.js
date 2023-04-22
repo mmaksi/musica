@@ -83,6 +83,7 @@ export async function storeSongWithUser(task) {
 
   // Store the song with user data in firestore
   await songsCollection.add(song) // doesn't allow for setting custom document id
+  return song
 }
 
 export function cancelUpload(songs) {
@@ -94,4 +95,25 @@ export function cancelUpload(songs) {
 
 export async function getUserSongs() {
   return await songsCollection.where('uid', '==', auth.currentUser.uid).get()
+}
+
+export async function editSongData(docID, values) {
+  try {
+    await songsCollection.doc(docID).update({ modifiedName: values.modifiedName })
+  } catch (error) {
+    throw new Error(`Failed to update song data. Try again later.`)
+  }
+}
+
+export async function deleteSong(docID, originalName) {
+  try {
+    // Delete from Storage
+    const storageRef = storage.ref()
+    var songRef = storageRef.child(`songs/${originalName}`)
+    await songRef.delete()
+    // Delete document from firestore
+    await songsCollection.doc(docID).delete()
+  } catch (error) {
+    throw new Error(`Failed to delete song data. Try again later.`)
+  }
 }
