@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCryzxYtLIQR3If6TRAiKnONY9RTqZIMrc',
@@ -16,9 +17,11 @@ firebase.initializeApp(firebaseConfig)
 
 export const auth = firebase.auth()
 const db = firebase.firestore()
+const storage = firebase.storage()
 
-// Selects the users collection
+// Selects the collection
 const usersCollection = db.collection('users')
+const songsCollection = db.collection('songs')
 
 // Create a user with email and password in firebase
 export async function createUser(name, email, password) {
@@ -36,10 +39,9 @@ export async function createUser(name, email, password) {
 // Save to the firestore database
 export async function addUser(uid, userData) {
   try {
-    await usersCollection.doc(userData.uid).set(userData)
+    await usersCollection.doc(uid).set(userData)
     return true
   } catch (error) {
-    console.log(error)
     return false
   }
 }
@@ -58,4 +60,27 @@ export async function authenticate({ email, password }) {
 
 export async function logoutUser() {
   await auth.signOut()
+}
+
+export function uploadToFirebase(file) {
+  // References allow read/write operations. Snapshots are read-only
+  const storageRef = storage.ref() // music-vue-js.appspot.com
+  const songsRef = storageRef.child(`songs/${file.name}`) // music-vue-js.appspot.com/songs/${file.name}
+  const task = songsRef.put(file)
+  return task
+}
+
+export async function storeSongWithUser(task) {
+  const song = {
+    uid: auth.currentUser.uid,
+    displayName: auth.currentUser.displayName,
+    originalName: task.snapshot.ref.name,
+    modifiedName: task.snapshot.ref.name,
+    genre: '',
+    commentCount: 0
+  }
+  song.url = await task.snapshot.ref.getDownloadURL()
+
+  // Store the song with user data in firestore
+  await songsCollection.add(song) // doesn't allow for setting custom document id
 }
