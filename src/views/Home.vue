@@ -97,7 +97,6 @@ export default {
             this.pendingRequest = true
             const allSongs = await getAllSongs(this.songs, this.maxPerPage)
             this.songs = [...this.songs, ...allSongs]
-            console.log(this.songs)
             this.pendingRequest = false
         }
     },
