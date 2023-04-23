@@ -121,3 +121,25 @@ export async function deleteSong(docID, originalName) {
     throw new Error(`Failed to delete song data. Try again later.`)
   }
 }
+
+export async function getAllSongs(compSongs, maxPerPage) {
+  let querySnapshot
+  if (compSongs.length) {
+    const lastDoc = await songsCollection.doc(compSongs[compSongs.length - 1].docID).get()
+    querySnapshot = await songsCollection
+      .orderBy('modifiedName')
+      .startAfter(lastDoc)
+      .limit(maxPerPage)
+      .get()
+  } else {
+    querySnapshot = await songsCollection.orderBy('modifiedName').limit(maxPerPage).get()
+  }
+
+  const songs = []
+  querySnapshot.forEach((doc) => {
+    const song = { docID: doc.id, ...doc.data() }
+    songs.push(song)
+  })
+
+  return songs
+}
