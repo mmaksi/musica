@@ -10,7 +10,8 @@ import './assets/base.css'
 import './includes/firebase'
 import VeeValidatePlugin from './includes/validation'
 import { auth } from './includes/firebase'
-import Icon from './directives/icon'
+// import Icon from '@/directives/icon'
+import i18n from '@/includes/i18n'
 
 let authFlag = true
 auth.onAuthStateChanged(() => {
@@ -21,7 +22,8 @@ auth.onAuthStateChanged(() => {
       .use(router)
       .use(createPinia())
       .use(VeeValidatePlugin)
-      .directive('icon', Icon)
+      .use(i18n)
+      // .directive('icon', Icon)
       .mount('#app')
   }
 })

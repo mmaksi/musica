@@ -28,6 +28,14 @@
                         </li>
                     </template>
                 </ul>
+                <ul class="ml-auto flex flex-row mt-1">
+                    <li>
+                        <a hxref="#" class="px-2 text-white" @click.prevent="changeLocaleNL">Dutch</a>
+                    </li>
+                    <li>
+                        <a hxref="#" class="px-2 text-white" @click.prevent="changeLocaleEN">English</a>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
@@ -42,7 +50,10 @@ import { logoutUser } from "../includes/firebase"
 export default {
     name: "AppHeader",
     computed: {
-        ...mapStores(useUserStore)
+        ...mapStores(useUserStore),
+        currentLocale() {
+            return this.$i18n.locale === 'nl' ? 'Dutch' : 'English';
+        }
     },
     methods: {
         ...mapActions(useModalStore, ['toggleModal']),
@@ -54,6 +65,12 @@ export default {
             logoutUser()
             this.userStore.isLoggedIn = false;
             if (this.$route.meta.requiresAuth) this.$router.push({ name: 'home' })
+        },
+        changeLocaleEN() {
+            this.$i18n.locale = 'en'
+        },
+        changeLocaleNL() {
+            this.$i18n.locale = 'nl'
         }
     }
 }
