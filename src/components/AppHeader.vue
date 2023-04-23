@@ -11,9 +11,6 @@
                 <!-- Primary Navigation -->
                 <ul class="flex flex-row mt-1">
                     <!-- Navigation Links -->
-                    <li>
-                        <RouterLink class="px-2 text-white" :to="{ name: 'about' }">About</RouterLink>
-                    </li>
                     <li v-if="!userStore.isLoggedIn">
                         <a class="px-2 text-white" href="#" @click="toggleAuthModal">Login
                             /
@@ -30,10 +27,12 @@
                 </ul>
                 <ul class="ml-auto flex flex-row mt-1">
                     <li>
-                        <a hxref="#" class="px-2 text-white" @click.prevent="changeLocaleNL">Dutch</a>
+                        <a hxref="#" class="px-2 text-white disable-select cursor-pointer"
+                            @click.prevent="changeLocaleNL">Dutch</a>
                     </li>
                     <li>
-                        <a hxref="#" class="px-2 text-white" @click.prevent="changeLocaleEN">English</a>
+                        <a hxref="#" class="px-2 text-white disable-select cursor-pointer"
+                            @click.prevent="changeLocaleEN">English</a>
                     </li>
                 </ul>
             </div>

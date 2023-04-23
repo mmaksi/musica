@@ -64,6 +64,13 @@ input[type='file'] {
   color: white !important;
 }
 
+.disable-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 @keyframes progress-bar-stripes {
   0% {
     background-position: 1rem 0;
