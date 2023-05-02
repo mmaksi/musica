@@ -13,7 +13,7 @@
         <div v-show="showForm === true">
             <div class="text-white text-center font-bold p-4 mb-4" v-if="showAlert" :class="alertVariant">{{ alertMessage }}
             </div>
-            <VeeForm :validation-schema="songSchema" @submit="editSong" :initial-values="song">
+            <VeeForm v-bind="veeFormAttrs" @submit="editSong">
                 <div class="mb-3">
                     <label class="inline-block mb-2">Song Title</label>
                     <VeeField name="modifiedName" type="text"
@@ -27,6 +27,7 @@
                         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition duration-500 focus:outline-none focus:border-black rounded"
                         placeholder="Enter Genre" @input="updateUnsavedFlag(true)" />
                 </div>
+                <!-- v-bind:disabled is a Boolean Attribute -->
                 <button :disabled="inSubmission" type="submit" class="py-1.5 px-3 rounded text-white bg-green-600">
                     Submit
                 </button>
@@ -46,6 +47,12 @@ export default {
     name: "CompositionItem",
     data() {
         return {
+            veeFormAttrs: {
+                validationSchema: {
+                    modifiedName: 'required'
+                },
+                initialValues: this.song
+            },
             showForm: false,
             songSchema: {
                 modifiedName: 'required'

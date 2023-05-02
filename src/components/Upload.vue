@@ -6,6 +6,7 @@
         </div>
         <div class="p-6">
             <!-- Upload Dropbox -->
+            <!-- v-bind directive is used to render componet's state inside html attributes -->
             <div :class="{ 'bg-green-400 border-green-400 bg-solid': is_dragover }"
                 class="w-full px-10 py-20 rounded text-center cursor-pointer border border-dashed border-gray-400 text-gray-400 transition duration-500 hover:text-white hover:bg-green-400 hover:border-green-400 hover:border-solid"
                 @drag.prevent.stop="" @dragstart.prevent.stop="" @dragend.prevent.stop="is_dragover = false"

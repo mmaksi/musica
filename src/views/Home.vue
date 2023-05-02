@@ -39,7 +39,9 @@
 import { getAllSongs } from "@/includes/firebase"
 import SongItem from "@/components/SongItem.vue"
 
+// Component's options as an object where its properties are exposed on `this` inside functions
 export default {
+    // Reactive state exposed on `this`
     data() {
         return {
             songs: [],
@@ -47,6 +49,8 @@ export default {
             pendingRequest: false,
         }
     },
+    // Methods are functions that mutate state and trigger updates.
+    // They can be bound as event listeners in templates.
     methods: {
         handleScroll() {
             const { scrollTop, offsetHeight } = document.documentElement;
@@ -75,6 +79,7 @@ export default {
     components: {
         SongItem
     },
+    // Lifecycle hooks
     async created() {
         this.getSongs()
         window.addEventListener("scroll", this.handleScroll);

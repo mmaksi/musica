@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+// import the root component App from a single-file component.
 import App from './App.vue'
 import router from './router'
 
@@ -24,6 +25,7 @@ auth.onAuthStateChanged(() => {
       .use(VeeValidatePlugin)
       .use(i18n)
       // .directive('icon', Icon)
+      // Mount a root container to the app instance
       .mount('#app')
   }
 })
